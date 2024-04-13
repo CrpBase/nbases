@@ -1,0 +1,46 @@
+import random
+
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 18)
+
+def generate_board():
+    numbers = list(range(1, 16))
+    random.shuffle(numbers)
+    board = [numbers[i:i+4] for i in range(0, 15, 4)]
+    board[-1].append(' ')
+    return board
+
+def get_blank_position(board):
+    for i in range(4):
+        for j in range(4):
+            if board[i][j] == ' ':
+                return i, j
+
+def move(board, direction):
+    blank_i, blank_j = get_blank_position(board)
+    if direction == 'up' and blank_i < 3:
+        board[blank_i][blank_j], board[blank_i + 1][blank_j] = board[blank_i + 1][blank_j], board[blank_i][blank_j]
+    elif direction == 'down' and blank_i > 0:
+        board[blank_i][blank_j], board[blank_i - 1][blank_j] = board[blank_i - 1][blank_j], board[blank_i][blank_j]
+    elif direction == 'left' and blank_j < 3:
+        board[blank_i][blank_j], board[blank_i][blank_j + 1] = board[blank_i][blank_j + 1], board[blank_i][blank_j]
+    elif direction == 'right' and blank_j > 0:
+        board[blank_i][blank_j], board[blank_i][blank_j - 1] = board[blank_i][blank_j - 1], board[blank_i][blank_j]
+
+def is_solved(board):
+    return all(board[i][j] == i*4 + j + 1 for i in range(4) for j in range(4))
+
+def main():
+    board = generate_board()
+    print("Welcome to 15-Puzzle Game!")
+    print_board(board)
+    while not is_solved(board):
+        direction = input("Enter direction (up/down/left/right) to move blank space: ").lower()
+        move(board, direction)
+        print_board(board)
+    print("Congratulations! You solved the puzzle!")
+
+if __name__ == "__main__":
+    main()
