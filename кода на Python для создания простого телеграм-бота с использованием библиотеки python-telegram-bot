@@ -1,0 +1,41 @@
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+# Обработчик команды /start
+def start(update, context):
+    update.message.reply_text('Привет! Я бот. Как дела?')
+
+# Обработчик команды /help
+def help(update, context):
+    update.message.reply_text('Это помощь.')
+
+# Обработчик сообщений
+def echo(update, context):
+    update.message.reply_text(update.message.text)
+
+def main():
+    # Токен вашего бота, полученный от BotFather
+    token = 'YOUR_BOT_TOKEN'
+
+    # Создание экземпляра Updater и передача ему токена бота
+    updater = Updater(token, use_context=True)
+
+    # Получение объекта диспетчера из экземпляра Updater
+    dp = updater.dispatcher
+
+    # Добавление обработчика команды /start
+    dp.add_handler(CommandHandler("start", start))
+
+    # Добавление обработчика команды /help
+    dp.add_handler(CommandHandler("help", help))
+
+    # Добавление обработчика для всех сообщений
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    # Запуск бота
+    updater.start_polling()
+
+    # Ожидание завершения работы бота
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
